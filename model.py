@@ -15,6 +15,17 @@ word_list = open(
 
 
 def possible_words(guess, report, word_set):
+    """
+    This function filters a set of words based on the feedback from a guess.
+
+    Parameters:
+    - guess (str): The word guessed by the user.
+    - report (list of int): A list containing integers representing the feedback for each character in the guess. 
+    - word_set (set of str): A set of possible words to be filtered.
+
+    Returns:
+    - result (set of str): A set containing only the words that match the feedback from the guess.
+    """
     result = set()
 
     for word in word_set:
@@ -39,6 +50,19 @@ def possible_words(guess, report, word_set):
 
 
 def generate_report(guess, target):
+    """
+    Generates a report for the given guess based on the target word.
+
+    Args:
+    guess (str): The guessed word by the user.
+    target (str): The target word to be guessed.
+
+    Returns:
+    tuple: A tuple containing integers representing the status of each character in the guess:
+           2 if the character is correct and in the correct position,
+           1 if the character is correct but in the wrong position,
+           0 if the character is incorrect.
+    """
     report = []
     target = list(target)
     for i, char in enumerate(guess):
@@ -54,6 +78,15 @@ def generate_report(guess, target):
 
 
 def run_report_permutations(guess):
+    """
+    Calculates the entropy of word permutations based on a given guess.
+
+    Args:
+    guess (str): The guessed word to compare against a list of words.
+
+    Returns:
+    float: The calculated entropy value.
+    """
 
     count = defaultdict(int)
     for word in word_list:

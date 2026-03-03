@@ -2,18 +2,31 @@ import random
 import sys
 
 
-class wordle():
+class wordle:
 
     def __init__(self):
+        """
+        Initializes a new Wordle game instance.
+        Loads the word list from a file and selects a random word as the answer.
+        Prints the selected word for debugging purposes (should not be shown in actual gameplay).
+        """
         self.word_list = open(
             "/home/doge/Packages/wordle-solver/wordle_possibles.txt").read().split('\n')
-        word = self.word_list[random.randint(0, len(self.word_list))]
-        print("The word to guess is : " + word)
-        self.correct_word = word
-        self.word = list(word)
+        self.correct_word = random.choice(self.word_list)
+        print("The word to guess is : " + self.correct_word)
+        self.word = list(self.correct_word)
 
     def validate_guess(self, guess):
+        """
+        Validates the user's guess.
+        Checks if the guess is 5 letters long and a valid word from the word list.
 
+        Args:
+            guess (str): The user's guess.
+
+        Returns:
+            bool: True if the guess is valid, False otherwise.
+        """
         if len(guess) != 5:
             print("Guess is not 5 letters")
             return False
@@ -23,7 +36,19 @@ class wordle():
         return True
 
     def test_guess(self, guess):
+        """
+        Tests the user's guess against the correct word.
+        Provides feedback on the position and accuracy of each character.
 
+        Args:
+            guess (str): The user's guess.
+
+        Returns:
+            list: A list of integers representing the feedback for each character in the guess.
+                  0 - Letter is not in the word
+                  1 - Letter is in the word but in the wrong position
+                  2 - Letter is in the word and in the correct position
+        """
         if not self.validate_guess(guess):
             return False
 
@@ -46,6 +71,15 @@ class wordle():
         return report
 
     def emojis(self, char):
+        """
+        Converts the feedback integer to an emoji string.
+
+        Args:
+            char (int): The feedback integer.
+
+        Returns:
+            str: An emoji representing the feedback.
+        """
         if char == 0:
             return '⬜️'
         elif char == 1:
@@ -54,6 +88,12 @@ class wordle():
             return '🟩'
 
     def pretty_test_guess(self, report):
+        """
+        Prints the feedback as a string of emojis.
+
+        Args:
+            report (list): A list of integers representing the feedback for each character in the guess.
+        """
         print_line = list(map(self.emojis, report))
         print("".join(print_line))
 
