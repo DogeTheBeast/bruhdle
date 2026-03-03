@@ -2,7 +2,7 @@
 
 > Heavily inspired and motivated from this 3Blue1Brown video: [Solving Wordle with information theory](https://www.youtube.com/watch?v=v68zYyaEmEA&pp=ygUSM2JsdWUxYnJvd24gd29yZGxl)
 
-<img src="./assets/Logo.png" alt="Logo" width="200"/>
+<img src="./assets/Logo.png" alt="Logo" width="600"/>
 
 A simple wordle solver written using Python using information theory.
 
