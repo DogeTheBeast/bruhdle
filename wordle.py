@@ -4,7 +4,7 @@ import sys
 
 class wordle:
 
-    def __init__(self):
+    def __init__(self, word=None):
         """
         Initializes a new Wordle game instance.
         Loads the word list from a file and selects a random word as the answer.
@@ -12,9 +12,12 @@ class wordle:
         """
         self.word_list = open(
             "/home/doge/Packages/wordle-solver/wordle_possibles.txt").read().split('\n')
-        self.correct_word = random.choice(self.word_list)
-        print("The word to guess is : " + self.correct_word)
+        if word:
+            self.correct_word = word
+        else:
+            self.correct_word = random.choice(self.word_list)
         self.word = list(self.correct_word)
+        print("The word to guess is : " + self.correct_word)
 
     def validate_guess(self, guess):
         """
@@ -50,12 +53,7 @@ class wordle:
                   2 - Letter is in the word and in the correct position
         """
         if not self.validate_guess(guess):
-            return False
-
-        if guess == self.correct_word:
-            self.pretty_test_guess([2, 2, 2, 2, 2])
-            print("Guessed correctly 🎉")
-            sys.exit(0)
+            return
 
         report = []
         local_word = self.word.copy()
@@ -97,17 +95,27 @@ class wordle:
         print_line = list(map(self.emojis, report))
         print("".join(print_line))
 
+    def play_wordle(self):
+
+        tries = 1
+
+        while tries < 7:
+            guess = input("Guess: ")
+            report = self.test_guess(guess)
+            if not report:
+                continue
+            self.pretty_test_guess(report)
+            if all(r == 2 for r in report):
+                print("Guessed correctly 🎉")
+                print(f"Trial Count:{tries}")
+                sys.exit(0)
+            else:
+                tries += 1
+
+        print("Failed to guess the word ❌")
+
 
 if __name__ == "__main__":
-    wordle = wordle()
 
-    tries = 0
-
-    while tries < 6:
-        guess = input("Guess: ")
-        report = wordle.test_guess(list(guess))
-        if report:
-            wordle.pretty_test_guess(report)
-            tries += 1
-
-    print("Failed to guess the word ❌")
+    wordle = wordle() if len(sys.argv) < 2 else wordle(sys.argv[1])
+    wordle.play_wordle()

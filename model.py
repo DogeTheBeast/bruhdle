@@ -1,8 +1,10 @@
 import math
 import tqdm
+import requests
+import sys
 from collections import defaultdict
 from wordle import wordle
-
+from datetime import datetime
 from multiprocessing import Pool
 
 
@@ -14,13 +16,37 @@ word_list = open(
     '/home/doge/Packages/wordle-solver/wordle_possibles.txt').read().strip().split('\n')
 
 
+def fetch_wordle_data(date):
+    """
+    Fetches the Wordle data for a specific date from the New York Times API.
+
+    Args:
+        date (str): The date in YYYY-MM-DD format for which to retrieve the Wordle data.
+
+    Returns:
+        dict or None: A dictionary containing the Wordle data if the request is successful, otherwise None.
+    """
+    url = f"https://www.nytimes.com/svc/wordle/v2/{date}.json"
+
+    try:
+        response = requests.get(url)
+
+        # Check if the request was successful
+        response.raise_for_status()
+        return response.json()["solution"]
+
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
+
+
 def possible_words(guess, report, word_set):
     """
     This function filters a set of words based on the feedback from a guess.
 
     Parameters:
     - guess (str): The word guessed by the user.
-    - report (list of int): A list containing integers representing the feedback for each character in the guess. 
+    - report (list of int): A list containing integers representing the feedback for each character in the guess.
     - word_set (set of str): A set of possible words to be filtered.
 
     Returns:
@@ -103,8 +129,14 @@ def run_report_permutations(guess):
 
 if __name__ == "__main__":
 
-    game = wordle()
-    report = None
+    if '-i' in sys.argv[1:]:
+        now = datetime.now()
+        current_date = now.strftime("%Y-%m-%d")
+
+        print(current_date)
+        game = wordle(fetch_wordle_data(current_date))
+    else:
+        game = wordle()
 
     with Pool() as pool:
         results = list(tqdm.tqdm(
@@ -114,13 +146,26 @@ if __name__ == "__main__":
 
     print("Done evaluating all words")
     word_set = set(word_list)
-    while True:
+
+    tries = 1
+
+    while tries < 7:
         best_guess = max(expected_information, key=expected_information.get)
-        print(f"The best guess that we have is {
-              best_guess} {game.correct_word}")
+        print(f"The best guess that we have is {best_guess}")
         report = game.test_guess(best_guess)
+        if not report:
+            continue
+        if all(r == 2 for r in report):
+            print("Guessed correctly 🎉")
+            print(f"Trial Count:{tries}")
+            sys.exit(0)
+        else:
+            tries += 1
+
         game.pretty_test_guess(report)
         word_set = possible_words(
             best_guess, report, word_set)
         expected_information = {
             key: expected_information[key] for key in expected_information if key in word_set}
+
+    print("Failed to guess the word ❌")
