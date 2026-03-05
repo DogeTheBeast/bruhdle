@@ -11,7 +11,7 @@ class wordle:
         Prints the selected word for debugging purposes (should not be shown in actual gameplay).
         """
         self.word_list = open(
-            "/home/doge/Packages/wordle-solver/wordle_possibles.txt").read().split('\n')
+            "./wordle_possibles.txt").read().split('\n')
         if word:
             self.correct_word = word
         else:

@@ -13,7 +13,7 @@ def parallel_entropy_calculation(word):
 
 
 word_list = open(
-    '/home/doge/Packages/wordle-solver/wordle_possibles.txt').read().strip().split('\n')
+    './wordle_possibles.txt').read().strip().split('\n')
 
 
 def fetch_wordle_data(date):
