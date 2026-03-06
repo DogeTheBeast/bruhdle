@@ -6,6 +6,12 @@
 
 A simple wordle solver written using Python using information theory.
 
+### Performance
+
+Here is a graph that is updated everyday with the amount of guesses it took to solve the daily wordle.
+
+![Daily](./assets/daily.png)
+
 ### Try it out
 
 1. Clone the repo

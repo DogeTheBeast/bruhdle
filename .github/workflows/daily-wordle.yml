@@ -8,37 +8,28 @@ on:
 
 jobs:
   extract-and-commit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          pip install -r ./requirements.txt
-
-      - name: Run Python script and extract Trial Count
+      - name: Run model
         id: analyse-daily-wordle
-        run: |
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          architecture: arm64
+      - run: |
+          pip install -r ./requirements.txt
           python model.py -i
-
-      - name: Extract trial count from logs
-        id: extract-trial-count
-        run: |
-          echo "::set-output name=trial_count::$(echo ${{ steps.Analyse_daily_wordle.outputs.stdout }} | grep -oP 'Trial Count:\K[^ ]+')"
+          python generate_graph.py
 
       - name: Commit and push changes to branch
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
-          git add trial_count.txt
-          git checkout -b data
+          git add trial_count.txt assets/daily.png
           git commit -m "Update Trial Count"
           git push origin main
         env:

@@ -158,6 +158,9 @@ if __name__ == "__main__":
         if all(r == 2 for r in report):
             print("Guessed correctly 🎉")
             print(f"Trial Count:{tries}")
+            if '-i' in sys.argv[1:]:
+                with open("trials_count.txt", "a", encoding="utf-8") as f:
+                    f.write(f'{current_date},{tries}')
             sys.exit(0)
         else:
             tries += 1
