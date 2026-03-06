@@ -14,7 +14,7 @@ data.set_index('Date', inplace=True)
 
 # Plot the data
 plt.figure(figsize=(10, 6))
-plt.plot(data.index, data['Number'], marker='o')
+plt.plot(data.index, data['Amount of tries'], marker='o')
 plt.title('Date vs Amount of tries to guess the correct word')
 plt.xlabel('Date')
 plt.ylabel('Amount of tries')
