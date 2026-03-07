@@ -160,7 +160,7 @@ if __name__ == "__main__":
             print(f"Trial Count:{tries}")
             if '-i' in sys.argv[1:]:
                 with open("trials_count.txt", "a", encoding="utf-8") as f:
-                    f.write(f'{current_date},{tries}')
+                    f.write(f'{current_date},{tries}\n')
             sys.exit(0)
         else:
             tries += 1
