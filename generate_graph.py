@@ -18,6 +18,7 @@ plt.plot(data.index, data['Amount of tries'], marker='o')
 plt.title('Date vs Amount of tries to guess the correct word')
 plt.xlabel('Date')
 plt.ylabel('Amount of tries')
+plt.ylim(0, 7)
 # plt.grid(True)
 
 # Export the plot to a PNG file
